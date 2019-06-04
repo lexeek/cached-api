@@ -1,0 +1,12 @@
+<div>
+  <p>
+    get cached on click (No request)
+  </p>
+  <button (click)="displayCachedData()">Fetch and display data</button>
+  
+  <div class="pre-content">
+  <pre *ngFor="let item of data">
+  {{item | json}}
+  </pre>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+pre {
+  display: flex;
+}
+
+.pre-content {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+:host{
+  display: flex;
+  flex-basis: 500px;
+}
