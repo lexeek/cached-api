@@ -1,8 +1,9 @@
 <div>
   <p>
-    get cached on click (No request)
+    No request, get data from Cache
+    <button (click)="data=[]">Clear</button>
   </p>
-  <button (click)="displayCachedData()">Fetch and display data</button>
+  <button (click)="displayCachedData()">Subscribe and display data from cache</button>
   
   <div class="pre-content">
   <pre *ngFor="let item of data">

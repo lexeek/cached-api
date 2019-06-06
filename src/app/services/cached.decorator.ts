@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
 const CACHE_SIZE = 1;
@@ -9,18 +10,29 @@ export default function Cached() {
     descriptor.value = function() {
       const fromCache = arguments[getCachedPropertyIndex(originalMethod)];
 
-
-      if (!this.cacheData$ || !(fromCache === undefined)) {
+      function initCacheData$() {
         Object.defineProperty(target, 'cacheData$', {
           enumerable: true,
           configurable: true,
           writable: true,
-          value: originalMethod.apply(this, arguments).pipe(
+          value: new Subject().pipe(
             shareReplay(CACHE_SIZE)
           )
         });
       }
 
+      if (!this.cacheData$ || !(fromCache === undefined)) {
+        if (!this.cacheData$) {
+          initCacheData$();
+        }
+        originalMethod.apply(this, arguments).subscribe(result => {
+          this.cacheData$.next({
+            result,
+            requestTime:
+              `${new Date().getHours()}h:${new Date().getMinutes()}m:${new Date().getSeconds()}s:${new Date().getMilliseconds()}ms`
+          });
+        });
+      }
       return this.cacheData$;
     };
 

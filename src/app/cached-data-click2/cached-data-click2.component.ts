@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CachedDataService } from '../services/cached-data.service';
 
 @Component({
@@ -10,18 +10,23 @@ export class CachedDataClick2Component implements OnInit, OnDestroy {
   private subscription: any;
   private data: any[] = [];
 
-  constructor(public cachedDataService: CachedDataService) {
+  constructor(public cachedDataService: CachedDataService, private ch: ChangeDetectorRef) {
   }
 
   ngOnInit() {
+    this.subscription = this.cachedDataService.fetchData().subscribe(response => {
+      this.data.push(response);
+    });
   }
 
   displayCachedData() {
-    this.subscription = this.cachedDataService.fetchData(false).subscribe(response => this.data.push(response));
+    this.cachedDataService.update();
+
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
-
 }

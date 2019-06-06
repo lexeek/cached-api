@@ -18,10 +18,19 @@ export class CachedDataClick1Component implements OnInit, OnDestroy {
   }
 
   displayCachedData() {
-    this.subscription = this.cachedDataService.fetchData().subscribe(response => this.data.push(response));
+    this.unsubscribeApi();
+    this.subscription = this.cachedDataService.fetchData().subscribe(response => {
+      this.data.push(response);
+    });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.unsubscribeApi();
+  }
+
+  private unsubscribeApi() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
